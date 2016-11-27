@@ -110,7 +110,7 @@ Func _Push($pTitle, $pMessage)
 EndFunc   ;==>_Push
 
 Func _PushFile($File, $Folder, $FileType, $title, $body)
-	$oHTTP = ObjCreate("WinHTTP.WinHTTPRequest.5.1")
+$oHTTP = ObjCreate("WinHTTP.WinHTTPRequest.5.1")
 	$access_token = $PushBullettoken
 	$oHTTP.Open("Post", "https://api.pushbullet.com/v2/upload-request", False)
 	$oHTTP.SetCredentials($access_token, "", 0)
@@ -131,7 +131,7 @@ Func _PushFile($File, $Folder, $FileType, $title, $body)
 	If IsArray($upload_url) And IsArray($awsaccesskeyid) And IsArray($acl) And IsArray($key) And IsArray($signature) and IsArray($policy) Then
 		$Result = RunWait(@ScriptDir & "\curl\curl.exe -i -X POST " & $upload_url[0] & ' -F awsaccesskeyid="' & $awsaccesskeyid[0] & '" -F acl="' & $acl[0] & '" -F key="' & $key[0] & '" -F signature="' & $signature[0] & '" -F policy="' & $policy[0] & '" -F content-type="' & $FileType & '" -F file=@"' & @ScriptDir & '\' & $Folder & '\' & $File & '" -o "' & @ScriptDir & '\logs\curl.log"', "", @SW_HIDE)
 		If Not FileExists($dirLogs & "curl.log") then _FileCreate($dirLogs & "curl.log")
-		If GUICtrlRead($lblpushbulletdebug) = $GUI_CHECKED Then
+		If 1 Then
 			SetLog('=========================================================================')
 			SetLog($Result)
 			SetLog($upload_url[0])
@@ -160,24 +160,24 @@ Func _PushFile($File, $Folder, $FileType, $title, $body)
 				$oHTTP.Send($pPush)
 				$Result = $oHTTP.ResponseText
 			Else
-				If GUICtrlRead($lblpushbulletdebug) = $GUI_CHECKED Then
+				If 1 Then
 					SetLog($hFileOpen)
 					SetLog("There is an error and file was not uploaded")
 				EndIf
 			EndIf
 		Else
-			If GUICtrlRead($lblpushbulletdebug) = $GUI_CHECKED Then
+			If 1 Then
 				SetLog("Error encountered uploading file.")
 			EndIf
-		EndIf		
+		EndIf
 	Else
-		If GUICtrlRead($lblpushbulletdebug) = $GUI_CHECKED Then
+		If 1 Then
 			SetLog('=========================================================================')
 			SetLog('Malformed HTTP response:')
 			SetLog($Result)
 		EndIf
 	EndIf
-	If GUICtrlRead($lblpushbulletdebug) = $GUI_CHECKED Then
+	If 1 Then
 		SetLog($Result)
 		SetLog("You can paste this in the forum so we can check whether it is PushBullet problem or mine")
 		SetLog('=========================================================================')

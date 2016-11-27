@@ -1,0 +1,15 @@
+2016-11-27 23:00:42 : =========================================================================
+2016-11-27 23:00:42 : 0
+2016-11-27 23:00:42 : https://upload.pushbullet.com/upload-legacy/IZu8yJsF6L7yOVGMYuBY3jUJhgJmHQgJ
+2016-11-27 23:00:42 : public-read
+2016-11-27 23:00:42 : KwyUCJDSsXLslbKviPkMxLm484b4vIkp/status.jpg
+2016-11-27 23:00:42 : UX5s1uIy1ov6+xlj58JY7rGFKcs=
+2016-11-27 23:00:42 : eyKjb25kaXRpb25zIjTE6MzcuMjM0MTMwWiJ9
+2016-11-27 23:00:42 : AKIAJJIUQPUDGPM4GD3W
+2016-11-27 23:00:42 : https://dl2.pushbulletusercontent.com/KwyUCJDSsXLslbKviPkMxLm484b4vIkp/status.jpg
+2016-11-27 23:00:42 : {"data":{"acl":"public-read","awsaccesskeyid":"AKIAJJIUQPUDGPM4GD3W","content-type":"image/jpeg","key":"KwyUCJDSsXLslbKviPkMxLm484b4vIkp/status.jpg","policy":"eyKjb25kaXRpb25zIjTE6MzcuMjM0MTMwWiJ9","signature":"UX5s1uIy1ov6+xlj58JY7rGFKcs="},"file_name":"status.jpg","file_type":"image/jpeg","file_url":"https://dl2.pushbulletusercontent.com/KwyUCJDSsXLslbKviPkMxLm484b4vIkp/status.jpg","upload_url":"https://upload.pushbullet.com/upload-legacy/IZu8yJsF6L7yOVGMYuBY3jUJhgJmHQgJ"}
+2016-11-27 23:00:42 : C:\Users\hoaian\Documents\HITBot\bot\source\curl\curl.exe -i -X POST https://upload.pushbullet.com/upload-legacy/IZu8yJsF6L7yOVGMYuBY3jUJhgJmHQgJ -F awsaccesskeyid="AKIAJJIUQPUDGPM4GD3W" -F acl="public-read" -F key="KwyUCJDSsXLslbKviPkMxLm484b4vIkp/status.jpg" -F signature="UX5s1uIy1ov6+xlj58JY7rGFKcs=" -F policy="eyKjb25kaXRpb25zIjTE6MzcuMjM0MTMwWiJ9" -F content-type="image/jpeg" -F file=@"C:\Users\hoaian\Documents\HITBot\bot\source\Attacks\status.jpg" -o "C:\Users\hoaian\Documents\HITBot\bot\source\logs\curl.log"
+2016-11-27 23:00:42 : Error encountered uploading file.
+2016-11-27 23:00:42 : 0
+2016-11-27 23:00:42 : You can paste this in the forum so we can check whether it is PushBullet problem or mine
+2016-11-27 23:00:42 : =========================================================================
