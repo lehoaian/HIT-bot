@@ -24,5 +24,5 @@ $access_token = $PushBullettoken
 ;_Push("title", "msg")
 DirCreate($dirLogs)
 CreateLogFile()
-$statusFile = "status.jpg"
-_PushFile($statusFile, "imgs", "image/jpeg", "Last Raid", $statusFile)
+$statusFile = "Screenshot_7.png"
+_PushFile($statusFile, "imgs", "image/png", "Last Raid", $statusFile)
