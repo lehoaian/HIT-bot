@@ -6,6 +6,8 @@
 #include "commons\random_gaussian.au3"
 #include "commons\write_stats.au3"
 #include "commons\push_bullet.au3"
+#include <ScreenCapture.au3>
+#include <WinAPIGdi.au3>
 
 ;Push Bullet--------------------------------------------------------------------------
 $PushBulletEnabled = IniRead($config, "notification", "pushbullet", "0")
@@ -22,7 +24,33 @@ $PushBulletfreebuilder = IniRead($config, "notification", "freebuilder", "0")
 
 $access_token = $PushBullettoken
 ;_Push("title", "msg")
-DirCreate($dirLogs)
-CreateLogFile()
-$statusFile = "Screenshot_7.png"
-_PushFile($statusFile, "imgs", "image/png", "Last Raid", $statusFile)
+;~ DirCreate($dirLogs)
+;~ CreateLogFile()
+;~ $statusFile = "Screenshot_7.png"
+;~ _PushFile($statusFile, "imgs", "image/png", "Last Raid", $statusFile)
+
+While 1
+   WinActivate($HWnD)
+   ;~ _ScreenCapture_SetBMPFormat(0)
+   _ScreenCapture_CaptureWnd("imgs\hourly_status.jpg", $HWnD)
+   $statusFile = "hourly_status.jpg"
+   Sleep(500)
+
+   _PushFile($statusFile, "imgs", "image/jpg", "Hourly Status", $statusFile)
+
+
+   Sleep ( 30000 * 60 )
+WEnd
+
+;~ Local $hHBmp = _ScreenCapture_CaptureWnd("", $HWnD)
+
+;~ ; Create compressed PNG data
+;~ Local $pData = 0
+;~ Local $iLength = _WinAPI_CompressBitmapBits($hHBmp, $pData, $COMPRESSION_BITMAP_JPEG, 10)
+
+;~ _WinAPI_SaveHBITMAPToFile( "imgs\hourly_status.jpg", $hHBmp )
+;~ ; Delete unnecessary bitmaps
+;~ _WinAPI_DeleteObject($hHBmp)
+
+;~ ; Free memory
+;~ _WinAPI_FreeMemory($pData)
