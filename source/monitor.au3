@@ -7,7 +7,7 @@
 #include "commons\write_stats.au3"
 #include "commons\push_bullet.au3"
 #include <ScreenCapture.au3>
-#include <WinAPIGdi.au3>
+#include <GDIPlus.au3>
 
 ;Push Bullet--------------------------------------------------------------------------
 $PushBulletEnabled = IniRead($config, "notification", "pushbullet", "0")
@@ -29,31 +29,55 @@ $access_token = $PushBullettoken
 ;~ $statusFile = "Screenshot_7.png"
 ;~ _PushFile($statusFile, "imgs", "image/png", "Last Raid", $statusFile)
 
-While 1
-;~ 	$HWnD = WinGetHandle("MINGW64:/c/Users/anlth/Desktop/hit-bot-src/source")
-	WinActivate($HWnD)
-	;~ _ScreenCapture_SetBMPFormat(0)
-	_ScreenCapture_CaptureWnd("imgs\hourly_status.jpg", $HWnD)
-	$statusFile = "hourly_status.jpg"
-	Sleep(500)
 
-   _PushFile($statusFile, "imgs", "image/jpg", "Hourly Status", $statusFile)
 
-	FileDelete ("imgs/hourly_status.jpg")
-	Sleep(500)
+Func StartMonitoring()
+	$iMonitoringTiming	= IniRead($config, "notification", "monitoring_timing", 60)	; Default í 60 min
+	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iMonitoringTiming = ' & $iMonitoringTiming & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 
-   Sleep ( 1800000 )
-WEnd
+	$sFolder			= "imgs"
+	$sImg				= "hourly_status.jpg"
+	$sImg_Resize		= "hourly_status_r.jpg"
 
-;~ Local $hHBmp = _ScreenCapture_CaptureWnd("", $HWnD)
+	While 0
+		WinActivate($HWnD)
 
-;~ ; Create compressed PNG data
-;~ Local $pData = 0
-;~ Local $iLength = _WinAPI_CompressBitmapBits($hHBmp, $pData, $COMPRESSION_BITMAP_JPEG, 10)
+		;Capture screen to bitmap obj
+		_ScreenCapture_CaptureWnd($sFolder & '\' & $sImg, $HWnD)
 
-;~ _WinAPI_SaveHBITMAPToFile( "imgs\hourly_status.jpg", $hHBmp )
-;~ ; Delete unnecessary bitmaps
-;~ _WinAPI_DeleteObject($hHBmp)
+		_GDIPlus_Startup()
 
-;~ ; Free memory
-;~ _WinAPI_FreeMemory($pData)
+		$hBitmap = _GDIPlus_ImageLoadFromFile($sFolder & '\' & $sImg)
+		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $HWnD = ' & $HWnD & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $hBitmap = ' & $hBitmap & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+
+
+
+		Global $iW =_GDIPlus_ImageGetWidth( $hBitmap )
+		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iW = ' & $iW & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+		Global $iH = _GDIPlus_ImageGetHeight( $hBitmap )
+		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iH = ' & $iH & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+		Global $hBitmap_Resized = _GDIPlus_ImageResize($hBitmap, $iW / 2, $iH / 2) ;resize image
+
+		;Save to file
+		_GDIPlus_ImageSaveToFile ($hBitmap_Resized, $sFolder & '\' & $sImg_Resize )
+		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $sFolder & ''\'' & $sImg_Resize = ' & $sFolder & '\' & $sImg_Resize & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+
+
+		;Dispose
+		_GDIPlus_ImageDispose($hBitmap)
+		_GDIPlus_ImageDispose($hBitmap_Resized)
+		_GDIPlus_Shutdown()
+
+	   _PushFile($sImg_Resize, $sFolder, "image/jpg", "Hourly Status", $sImg)
+
+		FileDelete ($sFolder & '\' & $sImg)
+		FileDelete ($sFolder & '\' & $sImg_Resize)
+
+		;Wait for next wake
+		Sleep ( $iMonitoringTiming * 60 * 1000 )
+	WEnd
+EndFunc
+
+; Monitoring
+StartMonitoring()
