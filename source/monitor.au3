@@ -39,7 +39,7 @@ Func StartMonitoring()
 	$sImg				= "hourly_status.jpg"
 	$sImg_Resize		= "hourly_status_r.jpg"
 
-	While 0
+	While 1
 		WinActivate($HWnD)
 
 		;Capture screen to bitmap obj
