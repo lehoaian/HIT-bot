@@ -30,16 +30,19 @@ $access_token = $PushBullettoken
 ;~ _PushFile($statusFile, "imgs", "image/png", "Last Raid", $statusFile)
 
 While 1
-   WinActivate($HWnD)
-   ;~ _ScreenCapture_SetBMPFormat(0)
-   _ScreenCapture_CaptureWnd("imgs\hourly_status.jpg", $HWnD)
-   $statusFile = "hourly_status.jpg"
-   Sleep(500)
+;~ 	$HWnD = WinGetHandle("MINGW64:/c/Users/anlth/Desktop/hit-bot-src/source")
+	WinActivate($HWnD)
+	;~ _ScreenCapture_SetBMPFormat(0)
+	_ScreenCapture_CaptureWnd("imgs\hourly_status.jpg", $HWnD)
+	$statusFile = "hourly_status.jpg"
+	Sleep(500)
 
    _PushFile($statusFile, "imgs", "image/jpg", "Hourly Status", $statusFile)
 
+	FileDelete ("imgs/hourly_status.jpg")
+	Sleep(500)
 
-   Sleep ( 30000 * 60 )
+   Sleep ( 10000 )
 WEnd
 
 ;~ Local $hHBmp = _ScreenCapture_CaptureWnd("", $HWnD)

@@ -1,11 +1,11 @@
 HTTP/1.1 100 Continue
 
 HTTP/1.1 204 No Content
-X-Ratelimit-Reset: 1480391220
 X-Ratelimit-Limit: 16384
-X-Ratelimit-Remaining: 16380
-X-Cloud-Trace-Context: 2753d94ae3a8a6fe394cc6e755ef3a5e
-Date: Tue, 29 Nov 2016 03:41:43 GMT
+X-Ratelimit-Remaining: 16366
+X-Ratelimit-Reset: 1480406579
+X-Cloud-Trace-Context: 1b727be66490876c98ac3b133d29a3fd
+Date: Tue, 29 Nov 2016 07:19:08 GMT
 Content-Type: text/html
 Server: Google Frontend
 Content-Length: 0
