@@ -7,7 +7,8 @@
 #include "commons\write_stats.au3"
 #include <Date.au3>
 
-Func comm_restart_app ()
+Func comm_restart_app()
+	ConsoleWrite('@@ (10) :(' & @MIN & ':' & @SEC & ') comm_restart_app()' & @CRLF) ;### Function Trace
 	;Read config
 	$bluestack_wait_on_restart = IniRead($config, "app", "bluestack_wait_on_restart", 0)
 	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $bluestack_wait_on_restart = ' & $bluestack_wait_on_restart & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
@@ -33,6 +34,7 @@ Func comm_restart_app ()
 EndFunc
 
 Func event_duel_20time()
+	ConsoleWrite('@@ (36) :(' & @MIN & ':' & @SEC & ') event_duel_20time()' & @CRLF) ;### Function Trace
 	; Read config
 	$duel_20_time_active	= IniRead($config, "event", "duel_20_time_active", 0)
 	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $duel_20_time_active = ' & $duel_20_time_active & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
@@ -40,7 +42,7 @@ Func event_duel_20time()
 	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $duel_20_time_date = ' & $duel_20_time_date & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 
 	If $duel_20_time_active Then
-		If $duel_20_time_date = _NowDate() Then
+		If $duel_20_time_date <> _NowDate() Then
 			; Start dual in 20x20 times.
 			comm_restart_app()
 
@@ -82,33 +84,36 @@ Func event_duel_20time()
 	EndIf
 EndFunc
 
-Func brawl_play_10time ()
-   comm_restart_app()
+Func brawl_play_10time()
+	ConsoleWrite('@@ (87) :(' & @MIN & ':' & @SEC & ') brawl_play_10time()' & @CRLF) ;### Function Trace
 
-   ; Go challenge
-   Click( 775, 470 )
-   Sleep( 1000 )
-   ConsoleWrite("Go Challenger")
+	comm_restart_app()
 
-   ; Go arena
-   Click( 135, 440 )
-   Sleep( 1000 )
-   ConsoleWrite("Go garena")
+	; Go challenge
+	Click( 775, 470 )
+	Sleep( 1000 )
+	ConsoleWrite("Go Challenger")
 
-   ; Go Brawl
-   Click( 635, 465 )
-   Sleep( 1000 )
-   ConsoleWrite("Enter Brawl")
+	; Go arena
+	Click( 135, 440 )
+	Sleep( 1000 )
+	ConsoleWrite("Go garena")
 
-   For $i = 1500 To 1 Step -1
+	; Go Brawl
+	Click( 635, 465 )
+	Sleep( 1000 )
+	ConsoleWrite("Enter Brawl")
+
+	For $i = 1500 To 1 Step -1
 	  Click( 778, 517 )
 	  Sleep ( 1000 )
-   Next
+	Next
 
    ConsoleWrite("Finish Brawl")
 EndFunc
 
 Func duel_play_10time()
+	ConsoleWrite('@@ (115) :(' & @MIN & ':' & @SEC & ') duel_play_10time()' & @CRLF) ;### Function Trace
 	; Restart app
 	comm_restart_app()
 
@@ -148,6 +153,7 @@ EndFunc
 
 
 Func sanctuaries_play_1time()
+	ConsoleWrite('@@ (155) :(' & @MIN & ':' & @SEC & ') sanctuaries_play_1time()' & @CRLF) ;### Function Trace
 	; Restart app
 	comm_restart_app()
 
@@ -194,9 +200,21 @@ Func sanctuaries_play_1time()
 	ConsoleWrite("Go Sanctuaries ---- Finish")
 EndFunc
 
-;Init Logger
-DirCreate($dirLogs)
-CreateLogFile()
+Func init_bot()
+	ConsoleWrite('@@ (203) :(' & @MIN & ':' & @SEC & ') init_bot()' & @CRLF) ;### Function Trace
+	;Init Logger
+	DirCreate($dirLogs)
+	CreateLogFile()
+EndFunc
+
+Func end_bot()
+	ConsoleWrite('@@ (208) :(' & @MIN & ':' & @SEC & ') end_bot()' & @CRLF) ;### Function Trace
+	FileClose($hLogFileHandle)
+EndFunc
+
+init_bot()
+
+
 
 ; start_bot
 While 1
@@ -206,4 +224,5 @@ While 1
 	brawl_play_10time()
 WEnd
 
-FileClose($hLogFileHandle)
+end_bot()
+

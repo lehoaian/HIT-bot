@@ -31,48 +31,63 @@ $access_token = $PushBullettoken
 
 
 
-Func StartMonitoring()
+Func monitor_process()
+	ConsoleWrite('@@ (34) :(' & @MIN & ':' & @SEC & ') -------------------- monitor_process()' & @CRLF) ;### Function Trace
 	$iMonitoringTiming	= IniRead($config, "notification", "monitoring_timing", 60)	; Default í 60 min
 	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iMonitoringTiming = ' & $iMonitoringTiming & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+	$bluestack_title	= IniRead($config, "app", "bluestack_title", 0)
+	ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $bluestack_title = ' & $bluestack_title & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 
 	$sFolder			= "imgs"
 	$sImg				= "hourly_status.jpg"
 	$sImg_Resize		= "hourly_status_r.jpg"
 
 	While 1
-		WinActivate($HWnD)
+		$HWnD = WinActivate($bluestack_title)
 
+		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $HWnD = ' & $HWnD & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : WinWaitActive $i = ' & $i & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+
+		For $i = 5 To 1 Step -1
+			Sleep(200)
+			$ret = _ScreenCapture_CaptureWnd($sFolder & '\' & $sImg, $HWnD)
+			ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : _ScreenCapture_CaptureWnd $i = ' & $i & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+
+			If $ret = True Then
+				ExitLoop
+			EndIf
+		Next
 		;Capture screen to bitmap obj
-		_ScreenCapture_CaptureWnd($sFolder & '\' & $sImg, $HWnD)
 
 		_GDIPlus_Startup()
 
 		$hBitmap = _GDIPlus_ImageLoadFromFile($sFolder & '\' & $sImg)
-		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $HWnD = ' & $HWnD & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $hBitmap = ' & $hBitmap & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
 
+		If $hBitmap Then
+			$iW =_GDIPlus_ImageGetWidth( $hBitmap )
+			ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iW = ' & $iW & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+			$iH = _GDIPlus_ImageGetHeight( $hBitmap )
+			ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iH = ' & $iH & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+			$hBitmap_Resized = _GDIPlus_ImageResize($hBitmap, $iW / 2, $iH / 2) ;resize image
 
+			;Save to file
+			_GDIPlus_ImageSaveToFile ($hBitmap_Resized, $sFolder & '\' & $sImg_Resize )
 
-		Global $iW =_GDIPlus_ImageGetWidth( $hBitmap )
-		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iW = ' & $iW & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
-		Global $iH = _GDIPlus_ImageGetHeight( $hBitmap )
-		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $iH = ' & $iH & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
-		Global $hBitmap_Resized = _GDIPlus_ImageResize($hBitmap, $iW / 2, $iH / 2) ;resize image
+			;Dispose
+			_GDIPlus_ImageDispose($hBitmap)
+			_GDIPlus_ImageDispose($hBitmap_Resized)
 
-		;Save to file
-		_GDIPlus_ImageSaveToFile ($hBitmap_Resized, $sFolder & '\' & $sImg_Resize )
-		ConsoleWrite('@@ Debug(' & @ScriptLineNumber & ') : $sFolder & ''\'' & $sImg_Resize = ' & $sFolder & '\' & $sImg_Resize & @CRLF & '>Error code: ' & @error & @CRLF) ;### Debug Console
+			_PushFile($sImg_Resize, $sFolder, "image/jpg", "Hourly Status", $sImg)
 
+			FileDelete ($sFolder & '\' & $sImg)
+			FileDelete ($sFolder & '\' & $sImg_Resize)
 
-		;Dispose
-		_GDIPlus_ImageDispose($hBitmap)
-		_GDIPlus_ImageDispose($hBitmap_Resized)
+		Else
+			_Push("WARNING", "Screen Capture had failed !!! ")
+		EndIf
+
 		_GDIPlus_Shutdown()
-
-	   _PushFile($sImg_Resize, $sFolder, "image/jpg", "Hourly Status", $sImg)
-
-		FileDelete ($sFolder & '\' & $sImg)
-		FileDelete ($sFolder & '\' & $sImg_Resize)
 
 		;Wait for next wake
 		Sleep ( $iMonitoringTiming * 60 * 1000 )
@@ -80,4 +95,4 @@ Func StartMonitoring()
 EndFunc
 
 ; Monitoring
-StartMonitoring()
+monitor_process()
